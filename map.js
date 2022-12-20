@@ -47,6 +47,9 @@
     ctx.fillStyle = "rgb(20,20,20)"
     ctx.fill()
 
+    origin_x = 50
+    origin_y = 50
+
     spacing_x = 16
     spacing_y = 16
 
@@ -79,8 +82,8 @@
       
         // base circle position
 
-        x = 50 + i*spacing_x
-        y = 50 + j*spacing_y
+        x = origin_x + i*spacing_x
+        y = origin_y + j*spacing_y
 
         // wobble effect
 
@@ -129,7 +132,7 @@
           state_y[index] = y
         }
 
-        // draw circle
+        // draw grey dots, queue up color circles for later...
 
         if (radius == color_radius) {
           color_x.push(state_x[index])
@@ -145,7 +148,7 @@
       }
     }
 
-    // draw color dots on top
+    // color circles draw on top of grey dots
 
     while (color_x.length > 0) {
       x = color_x.pop()
