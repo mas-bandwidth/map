@@ -1,0 +1,13 @@
+DONE
+
+	Resolution independence
+
+TODO
+
+	Feed in live data from the simulator, perhaps via continuous polling once per-second?
+
+	Get touch events working on iOS (https://developer.mozilla.org/en-US/docs/Web/API/Touch_events)
+
+	Generate historical data for 24 hours and write it out to a file, then scrub or playback through it in time lapse mode.
+
+	Make the elements of the map configurable, eg. define sets of point types with a color gradient per-type following intensity passed in [0,1]

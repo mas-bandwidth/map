@@ -1,5 +1,5 @@
 ;(function () {
-  let canvas, ctx, mouse_x, mouse_y, width, height, size, state_x, state_y, data, wobble_intensity
+  let canvas, ctx, raw_mouse_x, raw_mouse_y, width, height, size, state_x, state_y, data, wobble_intensity
 
   function init () {
 
@@ -26,18 +26,18 @@
 
     wobble_intensity = 0.0
 
-    mouse_x = -1000
-    mouse_y = -1000
+    raw_mouse_x = -1000
+    raw_mouse_y = -1000
 
     canvas.addEventListener('mousemove', (e) => {
-      mouse_x = e.offsetX
-      mouse_y = e.offsetY
+      raw_mouse_x = e.offsetX
+      raw_mouse_y = e.offsetY
       wobble_intensity += 10.0
     })
 
     canvas.addEventListener('mouseleave', (e) => {
-      mouse_x = -1000
-      mouse_y = -1000
+      raw_mouse_x = -1000
+      raw_mouse_y = -1000
     })
 
   }
@@ -51,6 +51,16 @@
     ctx.rect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = "rgb(20,20,20)"
     ctx.fill()
+
+    canvas_width = canvas.getBoundingClientRect().width
+
+    standard_width = 2000.0
+    standard_height = 940.0
+
+    normalize_factor = canvas_width / standard_width
+
+    mouse_x = raw_mouse_x / normalize_factor
+    mouse_y = raw_mouse_y / normalize_factor
 
     origin_x = 50
     origin_y = 50
@@ -140,7 +150,7 @@
           state_y[index] = y
         }
 
-        // draw grey dots, queue up color circles for later...
+        // draw grey dots now, queue up color circles for later...
 
         if (radius == color_radius) {
           color_x.push(state_x[index])
@@ -149,7 +159,7 @@
         } else {
           ctx.fillStyle = color
           ctx.beginPath()
-          ctx.arc(state_x[index], state_y[index], radius, 0, 2 * Math.PI, true)
+          ctx.arc(state_x[index] * normalize_factor, state_y[index] * normalize_factor, radius * normalize_factor, 0, 2 * Math.PI, true)
           ctx.fill()
           ctx.closePath()
         }
@@ -164,7 +174,7 @@
       c = color_c.pop()
       ctx.fillStyle = c
       ctx.beginPath()
-      ctx.arc(x, y, color_radius, 0, 2 * Math.PI, true)
+      ctx.arc(x * normalize_factor, y * normalize_factor, color_radius * normalize_factor, 0, 2 * Math.PI, true)
       ctx.fill()
       ctx.closePath()
     }
