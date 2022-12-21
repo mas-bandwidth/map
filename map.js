@@ -56,9 +56,11 @@ const grey_radius = 3.5
       raw_mouse_y = -1000
     })
 
+    /*
     update_data()
 
 		setInterval(update_data, 1000)
+		*/
   }
 
   function update_data() {
