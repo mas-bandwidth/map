@@ -1,7 +1,26 @@
-;(function () {
-  let canvas, ctx, raw_mouse_x, raw_mouse_y, width, height, size, state_x, state_y, data, wobble_intensity
 
-  function init () {
+const dt = 1.0 / 60.0
+const standard_width = 2000
+const standard_height = 940
+const width = 120
+const height = 64
+const size = width * height
+const exclusion = 70
+const exclusion2 = exclusion * exclusion
+const pos_tightness = 0.20
+const origin_x = 50
+const origin_y = 50
+
+const spacing_x = 16
+const spacing_y = 16
+
+const color_radius = 5
+const grey_radius = 3.5
+
+;(function () {
+  let canvas, ctx, raw_mouse_x, raw_mouse_y, state_x, state_y, data, wobble_intensity
+
+  function init() {
 
     canvas = document.getElementById('gameCanvas')
 
@@ -10,9 +29,6 @@
     window.requestAnimationFrame(update)
 
     t = 0.0
-    width = 120
-    height = 64
-    size = width * height
 
     state_x = new Array(size)
     state_y = new Array(size)
@@ -40,9 +56,36 @@
       raw_mouse_y = -1000
     })
 
+    update_data()
+
+		setInterval(update_data, 1000)
   }
 
-  function update () {
+  function update_data() {
+    new_data = load_binary_resource("http://127.0.0.1:8000/data")
+    if (new_data.length > 0) {
+      data = new_data
+    }
+  }
+
+  function load_binary_resource(url) {
+    var byteArray = []
+  	try {
+	  	var req = new XMLHttpRequest()
+  		req.open('GET', url, false)
+  		req.overrideMimeType('text\/plain; charset=x-user-defined')
+      req.send(null)
+  	} catch(error) {
+  		return byteArray
+  	}
+  	if (req.status != 200) return byteArray
+  	for (var i = 0; i < req.responseText.length; ++i) {
+    	byteArray.push(req.responseText.charCodeAt(i) & 0xff)
+  	}
+  	return byteArray
+  }
+
+  function update() {
 
     wobble_intensity *= 0.9
 
@@ -54,29 +97,14 @@
 
     canvas_width = canvas.getBoundingClientRect().width
 
-    standard_width = 2000.0
-    standard_height = 940.0
-
     normalize_factor = canvas_width / standard_width
 
     mouse_x = raw_mouse_x / normalize_factor
     mouse_y = raw_mouse_y / normalize_factor
 
-    origin_x = 50
-    origin_y = 50
-
-    spacing_x = 16
-    spacing_y = 16
-
-    color_radius = 5
-    grey_radius = 3.5
-
     color_x = new Array(0)
     color_y = new Array(0)
     color_c = new Array(0)
-
-    exclusion = 70
-    exclusion2 = exclusion * exclusion
 
     for (var j = 0; j < height-10; j++) {
       for (var i = 0; i < width; i++) {
@@ -135,13 +163,13 @@
         if (state_x[index] != 0) {
           dx = x - state_x[index]
           if (dx > 0.00001) {
-            state_x[index] += (x - state_x[index]) * 0.20
+            state_x[index] += (x - state_x[index]) * pos_tightness
           } else {
             state_x[index] = x
           }
           dy = y - state_y[index]
           if (dy > 0.00001) {
-            state_y[index] += (y - state_y[index]) * 0.20
+            state_y[index] += (y - state_y[index]) * pos_tightness
           } else {
             state_y[index] = y
           }
@@ -179,7 +207,7 @@
       ctx.closePath()
     }
 
-    t += 1.0 / 60.0
+    t += dt
   }
 
   document.addEventListener('DOMContentLoaded', init)
