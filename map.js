@@ -17,6 +17,10 @@ const spacing_y = 16
 const color_radius = 5
 const grey_radius = 3.5
 
+const wobble_tightness = 0.9
+const wobble_min = 0.32
+const wobble_max = 1.25
+
 ;(function () {
   let canvas, ctx, raw_mouse_x, raw_mouse_y, state_x, state_y, data, wobble_intensity
 
@@ -89,8 +93,6 @@ const grey_radius = 3.5
 
   function update() {
 
-    wobble_intensity *= 0.9
-
     window.requestAnimationFrame(update)
 
     ctx.rect(0, 0, canvas.width, canvas.height)
@@ -103,6 +105,8 @@ const grey_radius = 3.5
 
     mouse_x = raw_mouse_x / normalize_factor
     mouse_y = raw_mouse_y / normalize_factor
+
+    wobble_intensity *= wobble_tightness
 
     color_x = new Array(0)
     color_y = new Array(0)
@@ -132,9 +136,9 @@ const grey_radius = 3.5
 
         // wobble effect
 
-        wobble_magnitude = 0.32 + wobble_intensity
-        if (wobble_magnitude > 1.25) {
-          wobble_magnitude = 1.25
+        wobble_magnitude = wobble_min + wobble_intensity
+        if (wobble_magnitude > wobble_max) {
+          wobble_magnitude = wobble_max
         }
         wobble_x = wobble_magnitude * Math.sin(((-t*0.99)+(i+j)*0.025)*5)
         wobble_y = wobble_magnitude * Math.sin((-t*1.1+(i+j)*0.025)*10+2.5)
