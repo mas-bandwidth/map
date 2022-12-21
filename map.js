@@ -65,7 +65,7 @@ const grey_radius = 3.5
 
   function update_data() {
     new_data = load_binary_resource("http://127.0.0.1:8000/data")
-    if (new_data.length > 0) {
+    if (new_data.length == size) {
       data = new_data
     }
   }
