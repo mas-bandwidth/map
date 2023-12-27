@@ -1,3 +1,3 @@
 # map
 
-Javascript toy map
+Toy javascript map
