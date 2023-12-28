@@ -1,5 +1,5 @@
 # map
 
-Interactive javascript toy map, loosely inspired by particle effects on https://bitkraft.vc
+Toy javascript map
 
-See it in action here: https://networknext.github.io/map
+https://mas-bandwidth.github.io/map/
